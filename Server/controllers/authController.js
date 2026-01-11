@@ -1,3 +1,7 @@
+import User from "../models/User.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -41,12 +45,11 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+    // Password hashing is handled in User model pre-save middleware
     const user = await User.create({
       name,
       email,
-      password: hashedPassword,
+      password, 
       role: role || "user"
     });
 

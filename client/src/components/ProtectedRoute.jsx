@@ -1,14 +1,18 @@
-import { Children } from "react";
-import {Navigate} from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ Children, role}) => {
+const ProtectedRoute = ({ children, role }) => {
     const user = JSON.parse(localStorage.getItem("user"));
 
+    if (!user) return <Navigate to="/login" />;
 
-    if(!user) return <Navigate to="/login"/>;
-    if(role && user.role !== role) return <Navigate to="/"/>;
+    // Check if role is required and if user has that role
+    if (role && user.role !== role) {
+        // Redirect to appropriate dashboard based on actual role
+        if (user.role === 'admin') return <Navigate to="/admin" />;
+        return <Navigate to="/dashboard" />;
+    }
 
-    return Children;
+    return children;
 };
 
 export default ProtectedRoute;
